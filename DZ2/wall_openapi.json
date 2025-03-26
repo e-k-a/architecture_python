@@ -1,0 +1,442 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+      "title": "FastAPI",
+      "version": "0.1.0"
+    },
+    "paths": {
+      "/": {
+        "post": {
+          "summary": "Create Posts",
+          "operationId": "create_posts__post",
+          "parameters": [
+            {
+              "name": "authorization",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Authorization"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostCreate"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PostInDB"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "get": {
+          "summary": "Get Postss",
+          "operationId": "get_postss__get",
+          "parameters": [
+            {
+              "name": "skip",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "default": 0,
+                "title": "Skip"
+              }
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "default": 10,
+                "title": "Limit"
+              }
+            },
+            {
+              "name": "only_my",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "boolean",
+                "default": false,
+                "title": "Only My"
+              }
+            },
+            {
+              "name": "authorization",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Authorization"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/PostInDB"
+                    },
+                    "title": "Response Get Postss  Get"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/{post_id}": {
+        "get": {
+          "summary": "Get Posts",
+          "operationId": "get_posts__post_id__get",
+          "parameters": [
+            {
+              "name": "post_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Post Id"
+              }
+            },
+            {
+              "name": "authorization",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Authorization"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PostInDB"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "put": {
+          "summary": "Update Posts",
+          "operationId": "update_posts__post_id__put",
+          "parameters": [
+            {
+              "name": "post_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Post Id"
+              }
+            },
+            {
+              "name": "authorization",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Authorization"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostUpdate"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PostInDB"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete Post",
+          "operationId": "delete_post__post_id__delete",
+          "parameters": [
+            {
+              "name": "post_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Post Id"
+              }
+            },
+            {
+              "name": "authorization",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Authorization"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+  
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "HTTPValidationError": {
+          "properties": {
+            "detail": {
+              "items": {
+                "$ref": "#/components/schemas/ValidationError"
+              },
+              "type": "array",
+              "title": "Detail"
+            }
+          },
+          "type": "object",
+          "title": "HTTPValidationError"
+        },
+        "PostCreate": {
+          "properties": {
+            "title": {
+              "type": "string",
+              "maxLength": 100,
+              "title": "Title"
+            },
+            "content": {
+              "type": "string",
+              "maxLength": 5000,
+              "title": "Content"
+            },
+            "is_public": {
+              "type": "boolean",
+              "title": "Is Public",
+              "default": true
+            }
+          },
+          "type": "object",
+          "required": [
+            "title",
+            "content"
+          ],
+          "title": "PostCreate"
+        },
+        "PostInDB": {
+          "properties": {
+            "title": {
+              "type": "string",
+              "maxLength": 100,
+              "title": "Title"
+            },
+            "content": {
+              "type": "string",
+              "maxLength": 5000,
+              "title": "Content"
+            },
+            "is_public": {
+              "type": "boolean",
+              "title": "Is Public",
+              "default": true
+            },
+            "id": {
+              "type": "string",
+              "title": "Id"
+            },
+            "author_id": {
+              "type": "string",
+              "title": "Author Id"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Created At"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Updated At"
+            }
+          },
+          "type": "object",
+          "required": [
+            "title",
+            "content",
+            "id",
+            "author_id",
+            "created_at",
+            "updated_at"
+          ],
+          "title": "PostInDB"
+        },
+        "PostUpdate": {
+          "properties": {
+            "title": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Title"
+            },
+            "content": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 5000
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Content"
+            },
+            "is_public": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Is Public"
+            }
+          },
+          "type": "object",
+          "title": "PostUpdate"
+        },
+        "ValidationError": {
+          "properties": {
+            "loc": {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ]
+              },
+              "type": "array",
+              "title": "Location"
+            },
+            "msg": {
+              "type": "string",
+              "title": "Message"
+            },
+            "type": {
+              "type": "string",
+              "title": "Error Type"
+            }
+          },
+          "type": "object",
+          "required": [
+            "loc",
+            "msg",
+            "type"
+          ],
+          "title": "ValidationError"
+        }
+      }
+    }
+  }
