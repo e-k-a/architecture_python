@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "user-profile"
+version = "0.1.0"
+description = ""
+authors = ["Ekaterina <batova.ekateriina@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.115.12"
+sqlalchemy = "^2.0.39"
+pydentic = "^0.0.1.dev3"
+uvicorn = "^0.34.0"
+python-jose = "^3.4.0"
+passlib = "^1.7.4"
+pydantic-settings = "^2.8.1"
+pydantic = {extras = ["email"], version = "^2.10.6"}
+python-multipart = "^0.0.20"
+bcrypt = "^4.3.0"
+pymongo = "^4.12.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

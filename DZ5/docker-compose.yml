@@ -1,0 +1,129 @@
+version: "3.8"
+
+services:
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: db
+    environment:
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5431:5432"
+    volumes:
+      - "./pgdata:/var/lib/postgresql/data"
+    networks:
+      - backend
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+
+  postgressetup:
+    image: 'postgres:13.1-alpine'
+    environment:
+      - PG_USER=postgres
+      - PG_HOST=db      
+      - PG_PORT=5432
+      - DB_NAME=auth_db
+      - POSTGRES_PASSWORD=12345
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+    networks:
+      - backend
+    volumes:
+      - ./init_pg.sh:/init_pg.sh
+      - ./gen_pass.sh:/gen_pass.sh
+    command: ["/bin/bash", "/init_pg.sh"]
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /tmp/ready || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+
+  mongo:
+    image: mongo:4.2.8
+    container_name: mongo
+    hostname: mongo
+    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0"]
+    ports:
+      - "27017:27017"
+    networks:
+      - backend
+    restart: always
+
+  mongosetup:
+    image: mongo:4.2.8
+    depends_on:
+      - mongo
+    networks:
+      - backend
+    restart: "no"
+    entrypoint: ["bash", "-c", "sleep 10 && mongo --host mongo:27017 --eval 'rs.initiate()'"]
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+    restart: always
+  auth:
+    build:
+      context: auth 
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - backend
+    restart: always
+    depends_on: 
+      postgressetup:
+        condition: service_completed_successfully
+      redis:
+        condition: service_started
+    environment:  
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=auth_db
+      - DB_USER=postgres
+      - DB_PASSWORD=12345
+
+  wall:
+    build:
+      context: wall 
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    networks:
+      - backend
+    depends_on:
+      - auth
+      - mongo
+      - mongosetup
+    restart: always
+    environment:
+      - MONGO_HOST=mongo
+      - MONGO_PORT=27017
+      - MONGO_DB=wall_db
+
+  wrk:
+    image: williamyeh/wrk
+    networks:
+      - backend
+    entrypoint: tail -f /dev/null 
+
+    
+networks:
+  backend: {}
+    # driver: bridge
+
+volumes:
+  mongo_data:
